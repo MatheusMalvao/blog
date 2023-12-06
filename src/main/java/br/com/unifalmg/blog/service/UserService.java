@@ -26,15 +26,23 @@ public class UserService {
         if (Objects.isNull(id)) {
             throw new IllegalArgumentException("Id null when fetching for an user.");
         }
-        return repository.findById(id).orElseThrow(() ->
-                    new UserNotFoundException(
-                            String.format("No user found for id %d", id))
-                );
+        //return repository.findById.orElseThrow( () ->
+        //      new UserNotFoundException(
+        //              String.format("No user found for id %d", id))
+        // );
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new UserNotFoundException(
+                String.format("No user found for id %d", id));
     }
 
     public User add(User user) {
-        if (Objects.isNull(user) || Objects.isNull(user.getName())
-                || Objects.isNull(user.getUsername()) || Objects.isNull(user.getEmail())) {
+        if (Objects.isNull(user)
+                || Objects.isNull(user.getName())
+                || Objects.isNull(user.getUsername())
+                || Objects.isNull(user.getEmail())) {
             throw new InvalidUserException();
         }
         return repository.save(user);
@@ -53,6 +61,15 @@ public class UserService {
                 .website(request.getWebsite())
                 .build();
         return add(user);
+    }
+
+    public User edit(User existingUser, UserRequest request) {
+        existingUser.setName(request.getName());
+        existingUser.setUsername(request.getUsername());
+        existingUser.setEmail(request.getEmail());
+        existingUser.setPhone(request.getPhone());
+        existingUser.setWebsite(request.getWebsite());
+        return add(existingUser);
     }
 
 }
