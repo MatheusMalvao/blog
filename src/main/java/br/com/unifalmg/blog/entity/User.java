@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "db", name = "user")
+@Table(schema = "db2020108025", name = "user")
 public class User implements Serializable {
 
     @Id
@@ -31,5 +31,4 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
-
 }
